@@ -83,7 +83,10 @@ class LangGraphRuntime(AgentRuntime):
         tool_messages: list[ToolMessage] = []
         for tool_call in last_message.tool_calls:
             tool_name = tool_call["name"]
-            tool = self._tools_by_name[tool_name]
+            tool = self._tools_by_name.get(tool_name)
+            if tool is None:
+                raise ValueError(f"Unknown tool requested by model: {tool_name}")
+
             tool_args = dict(tool_call.get("args", {}))
             if tool_name == "add_comment" and not tool_args.get("task_id"):
                 tool_args["task_id"] = state["task_id"]

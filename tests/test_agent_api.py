@@ -115,3 +115,22 @@ def test_add_comment_without_task() -> None:
 
     assert response.status_code == 200
     assert "Нет активной задачи" in response.json()["answer"]
+
+
+def test_state_is_isolated_by_user_id() -> None:
+    client = _make_client()
+
+    create = client.post(
+        "/ask",
+        json={"user_id": "u-owner", "query": "Создай задачу: добавить пример агента"},
+    )
+    assert create.status_code == 200
+    assert "Задача создана" in create.json()["answer"]
+
+    comment = client.post(
+        "/ask",
+        json={"user_id": "u-other", "query": "А теперь добавь комментарий: сделано"},
+    )
+
+    assert comment.status_code == 200
+    assert "Нет активной задачи" in comment.json()["answer"]

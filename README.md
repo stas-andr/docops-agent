@@ -4,8 +4,8 @@ Stateful FastAPI AI agent with local Markdown RAG, task tools, and per-user conv
 state.
 
 The project is intentionally small and demo-oriented: it shows a clean API/core/repository
-split, LangGraph tool routing, local documentation retrieval, and in-memory task/state
-management.
+split, interface-driven agent runtime wiring, local documentation retrieval, and in-memory
+task/state management.
 
 ## Features
 
@@ -113,7 +113,7 @@ The project follows a small clean-architecture style layout:
 api/             FastAPI routes and dependency wiring
 schemas/         Pydantic request/response models
 core/            Business logic, state model, tools, and interfaces
-repositories/    Concrete in-memory, Markdown, Chroma, and LangGraph adapters
+repositories/    Concrete in-memory, Markdown, Chroma, and agent runtime adapters
 docs/            Local Markdown knowledge base
 tests/           API and behavior tests
 ```
@@ -125,7 +125,8 @@ FastAPI route -> AgentService -> AgentRuntime -> tools/retrievers/task tracker
 ```
 
 Routes stay thin and delegate behavior to `core/`. External integrations are hidden behind
-interfaces and wired in `api/dependencies.py`.
+interfaces and wired in `api/dependencies.py`. The current `AgentRuntime` adapter uses
+LangGraph, but the service layer depends only on the runtime interface.
 
 ## Quality Checks
 
