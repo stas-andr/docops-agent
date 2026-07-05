@@ -6,8 +6,9 @@ from typing import Any
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 
-from api.dependencies import get_chat_model
+from api.dependencies import get_chat_model, get_retriever
 from main import app
+from repositories.markdown_retriever import MarkdownRetriever
 
 
 class StubBoundModel:
@@ -66,6 +67,7 @@ class StubChatModel:
 
 def _make_client() -> TestClient:
     app.dependency_overrides[get_chat_model] = lambda: StubChatModel()
+    app.dependency_overrides[get_retriever] = lambda: MarkdownRetriever(docs_dir="docs")
     return TestClient(app)
 
 
