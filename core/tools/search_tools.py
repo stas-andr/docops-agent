@@ -19,7 +19,8 @@ def create_search_docs_tool(retriever: Retriever) -> BaseTool:
         if not contexts:
             answer = "Информация по этому запросу в документации не найдена."
         else:
-            answer = f"Ответ по документации:\n{'\n\n'.join(contexts)}"
+            joined_contexts = "\n\n".join(contexts)
+            answer = f"Ответ по документации:\n{joined_contexts}"
 
         return json.dumps(
             {"answer": answer, "last_topic": "search_docs", "task_id": None},
